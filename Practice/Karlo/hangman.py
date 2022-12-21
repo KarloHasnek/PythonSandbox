@@ -3,9 +3,9 @@ from random import choice
 from simple_colors import green, red, blue, yellow
 
 #database
-words = ["godina", "slova", "pjetao", "kuhinja", "lampa", "osoba", "konzola", "ulica", "dvor", "hodnik", "kabina",
-         "monitor", "apartman", "prostor", "rublje", "voda", "ovan", "otok", "paun", "konj", "patka", "sablja",
-         "gumica", "boja", "cvijet", "prozor", "sjemenke", "ormar", "stol", "olovka", "karta", "papir", "mobitel"]
+words = ['dvor', 'voda', 'ovan', 'otok', 'paun', 'konj', 'boja', 'stol', 'slova', 'lampa', 'osoba', 'ulica', 'patka',
+         'ormar', 'karta', 'papir', 'godina', 'pjetao', 'hodnik', 'kabina', 'rublje', 'sablja', 'gumica', 'cvijet',
+         'prozor', 'olovka', 'kolnik', 'kuhinja', 'konzola', 'monitor', 'prostor', 'mobitel', 'apartman', 'sjemenke']
 
 
 def pre_game():
@@ -21,27 +21,32 @@ def pre_game():
 
 def game_on(word, placeholder, numerator):
     broj_pogresaka = 0
-    while broj_pogresaka < 8:
-        lista_unosa = []
+    lista_unosa = []
+    while broj_pogresaka < len(word)*2:
         unos = str(input("Unesite slovo: "))
-        #provjera ako je unos vec iskoristen
-        if unos in lista_unosa or len(unos) != 1:
-            print(f'{yellow("Uneseni znak nije valjan ili je već iskorišten!")}')
+        if unos in lista_unosa:
+            print(f'{yellow("Uneseno slovo je već iskorišteno!")}')
+        elif len(unos) != 1:
+            print(f'{yellow("Unos je dulji od 1 slova")}')
         else:
             lista_unosa.append(unos)
+            lista_unosa.sort()
             #ako unos nije iskoristen
             if unos in word:
                 for i in range(len(word)):
                     if word[i] == unos:
                         placeholder[i] = unos
-
             else:
                 broj_pogresaka += 1
-                print(f'slovo {green(unos)} se ne nalazi u zadanoj rijeci.')
+                print(f'slovo {green(unos)} se ne nalazi u zadanoj riječi.\n')
 
-            print(f'{"".join(placeholder)}\n{numerator}')
-            if placeholder.count("_") == 0 or broj_pogresaka == 7:
+            if placeholder.count("_") == 0 or broj_pogresaka == len(word)*2:
+                print(f'{"".join(placeholder)}')
                 return post_game(placeholder)
+            else:
+                print(f'{"".join(placeholder)}\n{numerator}')
+                print(f'Preostalo pokušaja: {len(word)*2-broj_pogresaka}/{len(word)*2}\n')
+                print(f'Iskorištena slova su:\n{yellow(",".join(lista_unosa))}\n')
 
 
 def post_game(placeholder):
@@ -71,7 +76,7 @@ def main():
     print("".center(43, "-"))
     print("Vješala".center(43, "-"))
     print("".center(43, "-"), "\nPravila:")
-    print(f'1.Za svaku riječ imate {red("7")} pokušaja.\n2.Sva unesena slova moraju biti {red("mala")} slova.')
+    print(f'1.Ovisno o duljini riječi toliko pokušaja imate.\n2.Sva unesena slova moraju biti {red("mala")} slova.')
     print("".center(43, "-"))
     input(f'Za početak igre pritisnite {green("<Enter>")}: ')
     pre_game()
